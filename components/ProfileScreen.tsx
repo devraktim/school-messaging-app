@@ -1,3 +1,5 @@
+import { useAuth } from "@/context/AuthContext";
+import { useColors } from "@/hooks/useColors";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -11,8 +13,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAuth } from "@/context/AuthContext";
-import { useColors } from "@/hooks/useColors";
 
 const TAB_BAR_HEIGHT = Platform.OS === "web" ? 84 : 60;
 
@@ -240,8 +240,8 @@ export default function ProfileScreen() {
       >
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Contact Info</Text>
-          <InfoRow icon="mail" label="Email" value={user.email} />
-          <InfoRow icon="phone" label="Phone" value={user.phone} />
+          <InfoRow icon="mail" label="Email" value={user.email || "N/A"} />
+          <InfoRow icon="phone" label="Phone" value={user.phone || "N/A"} />
         </View>
 
         {isTeacher ? (

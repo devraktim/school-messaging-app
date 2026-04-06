@@ -26,7 +26,7 @@ interface ChatScreenProps {
   onSend: (text: string) => Promise<void>;
 }
 
-// 🔥 Helper: remove s/t prefix (s1 → 1, t5 → 5)
+// 🔥 Helper
 const getNumericId = (id?: string) => {
   if (!id) return "";
   return id.replace(/^[a-zA-Z]/, "");
@@ -48,27 +48,29 @@ export default function ChatScreen({
   const [inputText, setInputText] = useState("");
   const [sending, setSending] = useState(false);
 
+  // ✅ NEW: local optimistic messages
+  const [localMessages, setLocalMessages] = useState<Message[]>([]);
+
   const flatListRef = useRef<FlatList>(null);
 
-  // ✅ Process messages with correct ownership
+  // ✅ Merge API + local messages
+  const allMessages = useMemo(() => {
+    return [...messages, ...localMessages];
+  }, [messages, localMessages]);
+
+  // ✅ Process messages
   const processedMessages = useMemo(() => {
     const myId = getNumericId(user?.id);
 
-
-    let messagesData =  messages.map((m) => {
+    return allMessages.map((m: any) => {
       const senderId = getNumericId(m.sender_id);
-
-      const isOwn = senderId === myId;
 
       return {
         ...m,
-        isOwn,
+        isOwn: senderId === myId || m.isOwn === true, // 🔥 FIX
       };
     });
-
-
-    return messagesData
-  }, [messages, user]);
+  }, [allMessages, user]);
 
   const handleSend = async () => {
     const text = inputText.trim();
@@ -77,8 +79,26 @@ export default function ChatScreen({
     setInputText("");
     setSending(true);
 
+    // ✅ Create temp message
+    const tempMessage: any = {
+      id: "temp-" + Date.now(),
+      text,
+      sender_id: user?.id || "",
+      sender: "You",
+      timestamp: new Date().toISOString(),
+      isOwn: true, // 🔥 ensures right side
+    };
+
+    // ✅ Add instantly
+    setLocalMessages((prev) => [...prev, tempMessage]);
+
     try {
       await onSend(text);
+
+      // OPTIONAL: clear temp messages after API sync
+      setLocalMessages([]);
+    } catch (err) {
+      console.log("Send failed", err);
     } finally {
       setSending(false);
     }
@@ -224,35 +244,18 @@ export default function ChatScreen({
       alignItems: "center",
       justifyContent: "center",
     },
-
-    dateChip: {
-      alignSelf: "center",
-      backgroundColor: colors.muted,
-      paddingHorizontal: 12,
-      paddingVertical: 4,
-      borderRadius: 12,
-      marginBottom: 8,
-    },
-
-    dateChipText: {
-      fontSize: 11,
-      color: colors.mutedForeground,
-      fontFamily: "Inter_500Medium",
-    },
-
-    teacherBadge: {
-      fontSize: 10,
-      color: colors.primary,
-      fontFamily: "Inter_600SemiBold",
-      backgroundColor: "rgba(21,101,192,0.1)",
-      paddingHorizontal: 6,
-      paddingVertical: 1,
-      borderRadius: 4,
-      alignSelf: "flex-start",
-      marginBottom: 2,
-      marginLeft: 4,
-    },
   });
+
+  const formatTime = (dateStr: string) => {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+
+    return d.toLocaleTimeString("en-IN", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
   const renderMessage = ({ item }: { item: any }) => (
     <View
@@ -264,7 +267,9 @@ export default function ChatScreen({
       {!item.isOwn && isGroup && (
         <>
           {item.senderRole === "teacher" && (
-            <Text style={styles.teacherBadge}>Teacher</Text>
+            <Text style={{ fontSize: 10, color: colors.primary }}>
+              Teacher
+            </Text>
           )}
           <Text style={styles.senderName}>{item.sender}</Text>
         </>
@@ -295,7 +300,7 @@ export default function ChatScreen({
               : styles.bubbleTimeOther,
           ]}
         >
-          {item.timestamp}
+          {formatTime(item.timestamp)}
         </Text>
       </View>
     </View>
@@ -334,38 +339,6 @@ export default function ChatScreen({
           renderItem={renderMessage}
           contentContainerStyle={styles.messagesArea}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={
-            <View style={styles.dateChip}>
-              <Text style={styles.dateChipText}>Today</Text>
-            </View>
-          }
-          ListEmptyComponent={
-            isLoading ? (
-              <ActivityIndicator
-                size="large"
-                color={colors.primary}
-                style={{ marginTop: 48 }}
-              />
-            ) : (
-              <View style={{ alignItems: "center", marginTop: 48 }}>
-                <Feather
-                  name="message-circle"
-                  size={36}
-                  color={colors.mutedForeground}
-                />
-                <Text
-                  style={{
-                    marginTop: 12,
-                    fontSize: 14,
-                    color: colors.mutedForeground,
-                    fontFamily: "Inter_400Regular",
-                  }}
-                >
-                  No messages yet. Say hello!
-                </Text>
-              </View>
-            )
-          }
           onContentSizeChange={() =>
             flatListRef.current?.scrollToEnd({ animated: false })
           }

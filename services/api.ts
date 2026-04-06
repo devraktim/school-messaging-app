@@ -55,6 +55,8 @@ export interface ApiStudent {
   name: string;
   class: string;
   section: string;
+  class_name: string;
+  section_name: string;
   rollNumber: string;
   lastMessage?: string;
   lastMessageTime?: string;

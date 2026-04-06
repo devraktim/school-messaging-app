@@ -399,7 +399,7 @@ export default function MessagesScreen() {
           chatType: "individual",
           id: s.id,
           title: s.name,
-          subtitle: `${s.class} ${s.section} · Student No. ${s.rollNumber}`,
+          subtitle: `${s.class_name} ${s.section_name} · Student No. ${s.rollNumber}`,
         },
       });
     },
@@ -574,7 +574,7 @@ export default function MessagesScreen() {
             <PersonCard
               key={s.id}
               name={s.name}
-              sub={`${s.class} ${s.section} · Student No. ${s.rollNumber}`}
+              sub={`${s.class_name} ${s.section_name} · Student No. ${s.rollNumber}`}
               lastMsg={s.lastMessage}
               time={s.lastMessageTime}
               onPress={() => openStudent(s)}

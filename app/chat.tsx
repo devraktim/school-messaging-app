@@ -15,14 +15,37 @@ import { Alert } from "react-native";
 
 const POLL_INTERVAL_MS = 4000;
 
+// Show only time in 12 hours format
+// function formatTimestamp(dateStr: string): string {
+//   try {
+//     const d = new Date(dateStr);
+//     if (isNaN(d.getTime())) return dateStr;
+//     const h = d.getHours();
+//     const m = d.getMinutes();
+//     const ampm = h >= 12 ? "PM" : "AM";
+//     return `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${ampm}`;
+//   } catch {
+//     return dateStr;
+//   }
+// }
+
+// Show date and time in 12 hours format
 function formatTimestamp(dateStr: string): string {
   try {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
+
+    const day = d.getDate().toString().padStart(2, "0");
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
+    const year = d.getFullYear();
+
     const h = d.getHours();
     const m = d.getMinutes();
     const ampm = h >= 12 ? "PM" : "AM";
-    return `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${ampm}`;
+
+    const time = `${h % 12 || 12}:${m.toString().padStart(2, "0")} ${ampm}`;
+
+    return `${day}-${month}-${year} ${time}`;
   } catch {
     return dateStr;
   }
@@ -91,8 +114,6 @@ export default function ChatRoute() {
           ? await getClassMessagesApi(token, id)
           : await getIndividualMessagesApi(token, id);
         const mapped = (data.messages ?? []).map(mapMessage);
-        console.log("Fetched Data")
-        console.log(mapped)
         setMessages(mapped);
       } catch {
       } finally {
