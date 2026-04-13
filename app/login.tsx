@@ -1,21 +1,20 @@
+import { useAuth, UserRole } from "@/context/AuthContext";
+import { useColors } from "@/hooks/useColors";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
+  Alert, Image, KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useAuth, UserRole } from "@/context/AuthContext";
-import { useColors } from "@/hooks/useColors";
 
 export default function LoginScreen() {
   const colors = useColors();
@@ -74,14 +73,14 @@ export default function LoginScreen() {
       elevation: 8,
     },
     logoInner: {
-      width: 72,
-      height: 72,
-      borderRadius: 36,
-      backgroundColor: colors.primary,
-      alignItems: "center",
-      justifyContent: "center",
-      borderWidth: 3,
-      borderColor: colors.secondary,
+      // width: 72,
+      // height: 72,
+      // borderRadius: 36,
+      // backgroundColor: colors.primary,
+      // alignItems: "center",
+      // justifyContent: "center",
+      // borderWidth: 3,
+      // borderColor: colors.secondary,
     },
     logoText: {
       fontSize: 28,
@@ -210,6 +209,10 @@ export default function LoginScreen() {
       color: colors.mutedForeground,
       fontFamily: "Inter_400Regular",
     },
+    logoImage: {
+      width: 80,
+      height: 80,
+    },
   });
 
   return (
@@ -228,9 +231,14 @@ export default function LoginScreen() {
           <View style={styles.topSection}>
             <View style={styles.logoCircle}>
               <View style={styles.logoInner}>
-                <Text style={styles.logoText}>✝</Text>
+                <Image
+                  source={require("../assets/images/logo.png")}
+                  style={styles.logoImage}
+                  resizeMode="contain"
+                />
               </View>
             </View>
+
             <Text style={styles.schoolName}>St. Anthony Kurseong</Text>
             <Text style={styles.subtitle}>School Messaging App</Text>
             <View style={styles.yellowBar} />
