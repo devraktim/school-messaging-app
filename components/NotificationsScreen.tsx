@@ -1,8 +1,9 @@
+import { useColors } from "@/hooks/useColors";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useColors } from "@/hooks/useColors";
+import SettingsButton from "./SettingsButton";
 
 export default function NotificationsScreen() {
   const colors = useColors();
@@ -16,12 +17,18 @@ export default function NotificationsScreen() {
       paddingBottom: 20,
       paddingHorizontal: 20,
     },
+    headerFirstRow: {
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingTop: Platform.OS === "web" ? 0 : 14,
+    },
     headerTitle: {
       fontSize: 22,
       fontWeight: "700",
       color: "#ffffff",
       fontFamily: "Inter_700Bold",
-      paddingTop: Platform.OS === "web" ? 0 : 14,
     },
     emptyContainer: {
       flex: 1,
@@ -58,7 +65,10 @@ export default function NotificationsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Notifications</Text>
+        <View style={styles.headerFirstRow}>
+          <Text style={styles.headerTitle}>Notifications</Text>
+          <SettingsButton />
+        </View>
       </View>
       <View style={styles.emptyContainer}>
         <View style={styles.iconCircle}>

@@ -25,6 +25,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import SettingsButton from "./SettingsButton";
 
 type Tab = "classes" | "contacts";
 
@@ -457,12 +458,18 @@ export default function MessagesScreen() {
       paddingBottom: 16,
       paddingHorizontal: 20,
     },
+    headerFirstRow: {
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingTop: Platform.OS === "web" ? 0 : 14,
+    },
     headerTitle: {
       fontSize: 22,
       fontWeight: "700",
       color: "#ffffff",
       fontFamily: "Inter_700Bold",
-      paddingTop: Platform.OS === "web" ? 0 : 14,
     },
     searchContainer: {
       flexDirection: "row",
@@ -625,7 +632,10 @@ export default function MessagesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Messages</Text>
+        <View style={styles.headerFirstRow}>
+          <Text style={styles.headerTitle}>Messages</Text>
+          <SettingsButton />
+        </View>
         <View style={styles.searchContainer}>
           <Feather name="search" size={16} color="rgba(255,255,255,0.7)" />
           <TextInput

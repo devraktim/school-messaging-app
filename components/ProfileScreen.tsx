@@ -1,3 +1,4 @@
+import SettingsButton from "@/components/SettingsButton";
 import { useAuth } from "@/context/AuthContext";
 import { useColors } from "@/hooks/useColors";
 import { Feather } from "@expo/vector-icons";
@@ -81,11 +82,19 @@ export default function ProfileScreen() {
       paddingBottom: 32,
       alignItems: "center",
     },
+    headerFirstRow: {
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingTop: Platform.OS === "web" ? 0 : 14,
+    },
     headerTitle: {
-      fontSize: 16,
-      color: "rgba(255,255,255,0.8)",
-      fontFamily: "Inter_500Medium",
-      paddingTop: 14,
+      fontSize: 22,
+      fontWeight: "700",
+      color: "#ffffff",
+      fontFamily: "Inter_700Bold",
     },
     avatarRing: {
       width: 88,
@@ -213,7 +222,10 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Profile</Text>
+        <View style={styles.headerFirstRow}>
+          <Text style={styles.headerTitle}>My Profile</Text>
+          <SettingsButton />
+        </View>
         <View style={styles.avatarRing}>
           <View style={styles.avatarInner}>
             <Text style={styles.avatarInitial}>{initial}</Text>

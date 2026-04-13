@@ -1,11 +1,11 @@
+import { useColors } from "@/hooks/useColors";
 import { Feather } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
 import { BlurView } from "expo-blur";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
+import { Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import React from "react";
 import { Platform, StyleSheet, View, useColorScheme } from "react-native";
-import { useColors } from "@/hooks/useColors";
 
 function NativeTabLayout() {
   return (
